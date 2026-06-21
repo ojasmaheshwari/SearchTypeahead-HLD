@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Search Typeahead</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Search Engine</h1>
+            <p>A distributed typeahead system</p>
+        </header>
+
+        <main>
+            <div class="search-container">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Search..." autocomplete="off">
+                    <div class="loader" id="searchLoader"></div>
+                    <button id="searchButton" class="search-btn">Search</button>
+                </div>
+                <div class="suggestions-dropdown" id="suggestionsDropdown">
+                    <!-- dynamically injected -->
+                </div>
+            </div>
+
+            <div class="status-message" id="statusMessage"></div>
+
+            <div class="trending-section">
+                <h2>Trending Searches</h2>
+                <div class="trending-tags" id="trendingTags">
+                    <!-- dynamically injected -->
+                </div>
+            </div>
+
+            <div class="cache-debug-section" id="cacheDebugSection">
+                <!-- dynamically injected cache info -->
+            </div>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
