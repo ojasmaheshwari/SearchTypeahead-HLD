@@ -1,4 +1,4 @@
-import hashlib
+import zlib
 import bisect
 
 class HashRing:
@@ -11,9 +11,8 @@ class HashRing:
                 self.add_node(node)
 
     def _hash(self, key):
-        # Taking md5 and parsing directly to integer provides a reliable and even distribution
-        # Limiting to 64 bytes maybe not necessary, but returning standard int
-        return int(hashlib.md5(key.encode('utf-8')).hexdigest(), 16)
+        # Using CRC32 provides significantly faster integer hashing while ensuring capable string-to-ring node distribution
+        return zlib.crc32(key.encode('utf-8'))
 
     def add_node(self, node):
         for i in range(self.replicas):

@@ -12,7 +12,7 @@ from sqlalchemy import text
 from .db.database import get_db, engine, Base
 from .db.models import Search
 from .cache.cache_manager import get_suggestions, update_suggestions
-from .services.cache_updater import increment_pending_updates
+from .services.cache_updater import record_write_in_memory
 from .metrics.metrics import metrics
 from pydantic import BaseModel
 
@@ -79,22 +79,13 @@ def suggest(q: Optional[str] = None, db: Session = Depends(get_db)):
     return JSONResponse({"suggestions": suggestions})
 
 @app.post("/search")
-def search(req: SearchRequest, db: Session = Depends(get_db)):
+async def search(req: SearchRequest):
     q = req.query.strip().lower()
     if not q:
         return JSONResponse({"message": "Empty query"}, status_code=400)
         
     metrics.record_db_write()
-    search_record = db.query(Search).filter(Search.query == q).first()
-    if search_record:
-        search_record.count += 1
-    else:
-        search_record = Search(query=q, count=1)
-        db.add(search_record)
-    
-    db.commit()
-    
-    increment_pending_updates(q)
+    await record_write_in_memory(q)
     
     return JSONResponse({"message": "Searched"})
 
